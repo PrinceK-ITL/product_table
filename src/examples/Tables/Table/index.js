@@ -105,7 +105,6 @@ function DataTable({
   //   navigate(`/case-overview/${row?.original?.case_cloud_id}`);
   //  }
   // };
-  // Set the default value for the entries per page when component mounts
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
 
   // Set the entries per page value based on the select value
