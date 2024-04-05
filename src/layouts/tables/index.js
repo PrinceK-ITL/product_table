@@ -32,7 +32,7 @@ function DataTables() {
   const [filter2, setFilter2] = useState({
     name: "",
   });
-  // console.log('filter2: ', filter2.name);
+  // console.log('filter2: ', filter2.name)
 
   const handleFilter2 = (accessor, value) => {
     setFilter2({ ...filter2, [accessor]: value });
