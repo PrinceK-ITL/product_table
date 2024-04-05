@@ -45,6 +45,9 @@ import SoftInput from "components/SoftInput";
 import { Button, Checkbox, FormControlLabel, FormGroup, Input } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NoDataFound from "components/NoDataFound";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import { useDispatch } from "react-redux";
 
 function DataTable({
   entriesPerPage,
@@ -191,6 +194,9 @@ function DataTable({
   useEffect(() => {
     setGlobalFilter();
   }, []);
+
+  // const dispatch = useDispatch();
+  const [showFilter, setShowFilter] = useState(false);
 
   return (
     // <button type="submit">NEW CASE</button>
@@ -341,6 +347,28 @@ function DataTable({
         </SoftBox>
       ) : null}
 
+      <SoftBox
+        style={{
+          paddingRight: "20px",
+          display: "flex",
+          justifyContent: "end",
+          position: "sticky",
+          left: "0",
+        }}
+      >
+        <Button onClick={() => setShowFilter(!showFilter)}>
+          {showFilter ? (
+            <SoftBox>
+              <FilterAltOffIcon sx={{ fontSize: 30 }} />
+            </SoftBox>
+          ) : (
+            <SoftBox>
+              <FilterAltIcon sx={{ fontSize: 30 }} />
+            </SoftBox>
+          )}
+        </Button>
+      </SoftBox>
+
       {/* {entriesPerPage || canSearch ? (
         <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={2}>
           {entriesPerPage && (
@@ -424,7 +452,7 @@ function DataTable({
           ))}
         </SoftBox>
 
-        {Boolean(table?.isFilter) && (
+        {Boolean(table?.isFilter) && showFilter && (
           <TableRow className="">
             {Boolean(table?.columns) &&
               table?.columns?.map((item) => (
@@ -434,7 +462,7 @@ function DataTable({
                     {item?.filterInputType === "text" && (
                       <SoftBox display="flex" alignItems="center" sx={{ minWidth: "160px" }}>
                         <Input
-                          sx={{ fontSize: "12px", border:"none" }}
+                          sx={{ fontSize: "12px", border: "none" }}
                           type="text"
                           value={item?.filterValue}
                           onChange={(e) => {

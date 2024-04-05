@@ -1,24 +1,20 @@
-import React, { useState } from "react";
-import Card from "@mui/material/Card";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Slide from "@mui/material/Slide";
-
+import { Button, Card, Dialog, Slide } from "@mui/material";
 import SoftBox from "components/SoftBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
-// import dataTableData from "components/DataTable/TableData";
 import DataTable from "examples/Tables/Table";
 import RightSlideModal from "layouts/RightSlideModal";
-import EditIcon from "../../assets/images/edit.svg";
-import DeleteIcon from "../../assets/images/Trash.svg";
+import React, { useState } from "react";
+import EditIcon from "../../../assets/images/edit.svg";
+import DeleteIcon from "../../../assets/images/Trash.svg";
+import ProductForm from "./form";
+import MyModal from "components/Modal";
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
 }
 
-function DataTables() {
+const ProductTable = () => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -32,18 +28,17 @@ function DataTables() {
   const [filter2, setFilter2] = useState({
     name: "",
   });
+  // console.log('filter2: ', filter2.name);
 
   const handleFilter2 = (accessor, value) => {
     setFilter2({ ...filter2, [accessor]: value });
   };
-  
- 
 
   const dataTableData = {
-    // isFilter: true,
+    isFilter: true,
     columns: [
       {
-        Header: "casecloud id",
+        Header: " id",
         accessor: "name",
         width: "18%",
         filterValue: filter2.name,
@@ -52,11 +47,11 @@ function DataTables() {
         filterInputType: "text",
         filterLabel: "Search...",
       },
-      { Header: "family id", accessor: "position", width: "22%" },
+      { Header: "family ", accessor: "position", width: "22%" },
       { Header: "relations", accessor: "office" },
-      { Header: "cps", accessor: "age", width: "15%" },
+      { Header: "cpsffgf", accessor: "age", width: "15%" },
       { Header: "case status", accessor: "startDate" },
-      { Header: "created by", accessor: "salary" },
+      { Header: "create by", accessor: "salary" },
       {
         Header: "actions",
         accessor: "actions",
@@ -81,9 +76,6 @@ function DataTables() {
           </span>
         ),
       },
-      // { Header: "created by", accessor: "salfary" },
-      // { Header: "created by", accessor: "salasry" },
-      // { Header: "created by", accessor: "salasary" },
     ],
 
     rows: [
@@ -120,56 +112,65 @@ function DataTables() {
         startDate: "12/6/2020",
         salary: "$179,177",
       },
-      // {
-      //   name: "Maggi Slowan",
-      //   position: "Help Desk Technician",
-      //   office: "Jaunpils",
-      //   age: 56,
-      //   startDate: "11/7/2020",
-      //   salary: "$440,874",
-      // },
-      // {
-      //   name: "Marleah Snipe",
-      //   position: "Account Representative II",
-      //   office: "Orekhovo-Borisovo Severnoye",
-      //   age: 31,
-      //   startDate: "7/18/2021",
-      //   salary: "$404,983",
-      // },
-      // {
-      //   name: "Georgia Danbury",
-      //   position: "Professor",
-      //   office: "Gniezno",
-      //   age: 50,
-      //   startDate: "10/1/2020",
-      //   salary: "$346,576",
-      // },
+      {
+        name: "Maggi Slowan",
+        position: "Help Desk Technician",
+        office: "Jaunpils",
+        age: 56,
+        startDate: "11/7/2020",
+        salary: "$440,874",
+      },
+      {
+        name: "Marleah Snipe",
+        position: "Account Representative II",
+        office: "Orekhovo-Borisovo Severnoye",
+        age: 31,
+        startDate: "7/18/2021",
+        salary: "$404,983",
+      },
+      {
+        name: "Georgia Danbury",
+        position: "Professor",
+        office: "Gniezno",
+        age: 50,
+        startDate: "10/1/2020",
+        salary: "$346,576",
+      },
     ],
   };
 
-  const filteredRows = dataTableData.rows.filter(row =>
+  const filteredRows = dataTableData.rows.filter((row) =>
     row.name.toLowerCase().includes(filter2.name.toLowerCase())
-    );
+  );
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <SoftBox py={3}>
-        <SoftBox>
-          <Button onClick={handleClickOpen}>Add</Button>
-          <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
-            <RightSlideModal>
-              Hello
-              {/* put from */}
-            </RightSlideModal>
-          </Dialog>
+    <div>
+      <DashboardLayout>
+        <DashboardNavbar />
+        <SoftBox py={3}>
+            <MyModal text="Product" modalhead="Edit" TransitionComponent={Transition}>
+                <ProductForm />
+            </MyModal>
+          {/* <SoftBox>
+            <Button onClick={handleClickOpen}>Add</Button>
+            <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
+              <RightSlideModal>
+                <ProductForm />
+              </RightSlideModal>
+            </Dialog>
+          </SoftBox> */}
+          <Card>
+            <DataTable
+              table={{ ...dataTableData, rows: filteredRows }}
+              canSearch
+              tableTitle="Products"
+              entriesPerPage
+            />
+          </Card>
         </SoftBox>
-        <Card>
-          <DataTable table={{ ...dataTableData, rows: filteredRows }} canSearch tableTitle="Products" entriesPerPage />
-        </Card>
-      </SoftBox>
-    </DashboardLayout>
+      </DashboardLayout>
+    </div>
   );
-}
+};
 
-export default DataTables;
+export default ProductTable;

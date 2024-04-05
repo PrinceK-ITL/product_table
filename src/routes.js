@@ -53,6 +53,7 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
+import ProductTable from "layouts/tables/product";
 
 const routes = [
   {
@@ -64,13 +65,22 @@ const routes = [
     component: <Dashboard />,
     noCollapse: true,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Demo Tables",
+  //   key: "tables",
+  //   route: "/tables",
+  //   icon: <Office size="12px" />,
+  //   component: <Tables />,
+  //   noCollapse: true,
+  // },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
-    route: "/tables",
+    name: "Product",
+    key: "product",
+    route: "/product",
     icon: <Office size="12px" />,
-    component: <Tables />,
+    component: <ProductTable />,
     noCollapse: true,
   },
   // {
