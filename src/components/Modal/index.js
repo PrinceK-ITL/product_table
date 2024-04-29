@@ -31,7 +31,7 @@ const MyModal = (props) => {
 
   const handleOpen = () => {
     dispatch(setOpen(true));
-    // dispatch(editFrom(false));
+    dispatch(editFrom(false));
   };
 
   return (

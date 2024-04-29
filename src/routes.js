@@ -54,6 +54,7 @@ import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 import ProductTable from "layouts/tables/product";
+import ProductVariation from "layouts/tables/product/ProductVarition/form";
 
 const routes = [
   {
@@ -83,6 +84,16 @@ const routes = [
     component: <ProductTable />,
     noCollapse: true,
   },
+
+  // {
+  //   type: "collapse",
+  //   name: "variation",
+  //   key: "variation",
+  //   route: "/variation",
+  //   icon: <Office size="12px" />,
+  //   component: <ProductVariation />,
+  //   noCollapse: true,
+  // },
   // {
   //   type: "collapse",
   //   name: "Billing",

@@ -1,3 +1,61 @@
 /* .css-kg8p2k-MuiButtonBase-root-MuiButton-root svg {
     font-size: 2rem !important
 } */
+.error{
+    font-size: 12px;
+    color: red;
+}
+
+.custom-swal-container {
+  
+    z-index: 5000 !important;
+}
+
+.custom-swal-container button{
+  
+   width: 100px;
+}
+
+
+.css-1a8ju2e-MuiTableHead-root {
+    display: table-header-group !important;
+}
+
+
+/* .MuiInputBase-root {
+    border: none !important;
+}
+.MuiInputBase-root:focus{
+    outline: none !important;
+    outline-style: none !important;
+
+} */
+
+
+/* .MuiFilledInput-root {
+    outline: none !important;
+  } */
+
+  .commantable_input{
+    border: none;
+    border-bottom: 1px solid black;
+    background: #fdfdf7;
+    padding: 6px;
+    width: 100px;
+  }
+  .commantable_input:focus{
+    outline: none;
+  }
+
+  .productInputField{
+    /* width: 100%;
+    overflow-x: scroll; */
+    border: none;
+    border-bottom: 1px solid black;
+    padding: 6px;
+    width: 120px;
+    margin-right: 10px;
+  }
+  .productInputField:focus{
+    outline: none;
+  }

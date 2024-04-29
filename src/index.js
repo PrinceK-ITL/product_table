@@ -22,13 +22,18 @@ import App from "App";
 import { SoftUIControllerProvider } from "context";
 import { Provider } from "react-redux";
 import { store } from "./layouts/redux/store";
+import { MainContext } from "context/MainContext";
+import Toast from "components/Toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
   <BrowserRouter>
     <SoftUIControllerProvider>
+      <MainContext >
       <App />
+      </MainContext>
+      <Toast />
     </SoftUIControllerProvider>
   </BrowserRouter>
   </Provider>
