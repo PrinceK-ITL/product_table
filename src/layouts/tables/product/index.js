@@ -4,54 +4,145 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/Table";
 import RightSlideModal from "layouts/RightSlideModal";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import EditIcon from "../../../assets/images/edit.svg";
 import DeleteIcon from "../../../assets/images/Trash.svg";
 import ProductForm from "./form";
 import MyModal from "components/Modal";
+import { ProductList } from "api/product";
+import SoftButton from "components/SoftButton";
+import StatusButton from "components/Status";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectModal,
+  setOpen,
+  editFrom,
+  setDataEdit,
+  showNotification,
+  setproductEdit
+} from "layouts/redux/modal/slice";
+import { ProductDelete } from "api/product";
+import CustomSwal from "components/CustomSwal";
+import { ProductGetByid } from "api/product";
+import { PopupContext } from "context/Popup";
+import { ProductVariationByID } from "api/ProductVariation";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// import Toast from "components/Toast";
 
-function Transition(props) {
-  return <Slide direction="left" {...props} />;
-}
+// function Transition(props) {
+//   return <Slide direction="left" {...props} />;
+// }
 
 const ProductTable = () => {
-  const [open, setOpen] = React.useState(false);
+  const { edit } = useSelector(selectModal);
+  const dispatch = useDispatch();
+  // const [productList, setproductList] = useState([]);
+  const { setNotification,productList,fatchProductData } = useContext(PopupContext);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  // const obj = {
+  //   // "currentPage": 1,
+  //   // "itemsPerPage": 10,
+  //   // filters: [
+  //   //   {
+  //   //     "id": "name",
+  //   //     "value": "",
+  //   //   },
+  //   // ],
+  //   sortBy: [
+  //     {
+  //       id: "id",
+  //       desc: true,
+  //     },
+  //   ],
+  // };
+  // const fatchProductData = async () => {
+  //   const response = await ProductList(obj);
+  //   if (response.status === 200) {
+  //     setproductList(response?.data?.data?.rows);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fatchProductData(obj);
+  // }, []);
+
+  // const [filter2, setFilter2] = useState({
+  //   name: "",
+  // });
+
+  // const handleFilter2 = (accessor, value) => {
+  //   setFilter2({ ...filter2, [accessor]: value });
+  // };
+
+  const handleEdit = async (id) => {
+    // Fetch product details
+    const response = await ProductGetByid(id);
+    if (response.status === 200) {
+      dispatch(setOpen(true));
+      dispatch(editFrom(true));
+      dispatch(setDataEdit(response?.data?.data));
+    }
+  
+    // Fetch product variations
+    // const variationResponse = await ProductVariationByID(id);
+    // if (variationResponse.status === 200) {
+    //   console.log("response?.data?.data",response?.data?.data?.product_variations)
+    //   dispatch(setproductEdit(response?.data?.data));
+    // } 
   };
+  
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const [filter2, setFilter2] = useState({
-    name: "",
-  });
-  // console.log('filter2: ', filter2.name);
-
-  const handleFilter2 = (accessor, value) => {
-    setFilter2({ ...filter2, [accessor]: value });
+  const handleDelete = async (id) => {
+    const confirmDelete = await CustomSwal("Delete!", "Do you want to Delete", "skyblue", "red");
+    if (confirmDelete.isConfirmed) {
+      const deleteResponse = await ProductDelete(id);
+      if (deleteResponse.status === 200) {
+        fatchProductData();
+        dispatch(
+          showNotification({
+            title: "Success",
+            message: deleteResponse?.data?.message,
+            status: "success",
+            isOpen: true,
+          })
+        );
+      } else {
+        dispatch(
+          showNotification({
+            title: "Error",
+            message: deleteResponse?.data?.message,
+            status: "error",
+            isOpen: true,
+          })
+        );
+      }
+    }
   };
 
   const dataTableData = {
     isFilter: true,
     columns: [
       {
-        Header: " id",
+        Header: " product_name",
         accessor: "name",
         width: "18%",
-        filterValue: filter2.name,
-        filterHandleChange: handleFilter2,
-        filterAccessor: "name",
-        filterInputType: "text",
-        filterLabel: "Search...",
+        // filterValue: filter2.name,
+        // filterHandleChange: handleFilter2,
+        // filterAccessor: "name",
+        // filterInputType: "text",
+        // filterLabel: "Search...",
       },
-      { Header: "family ", accessor: "position", width: "22%" },
-      { Header: "relations", accessor: "office" },
-      { Header: "cpsffgf", accessor: "age", width: "15%" },
-      { Header: "case status", accessor: "startDate" },
-      { Header: "create by", accessor: "salary" },
+      { Header: "nested_category ", accessor: "nested_category", width: "22%" },
+      { Header: "sub_category", accessor: "sub_category" },
+      { Header: "article_number", accessor: "article_number", width: "15%" },
+      { Header: "tax", accessor: "tax" },
+      // {
+      //   Header: "status",
+      //   accessor: "status",
+      //   Cell: (value) => <StatusButton status={value} />,
+      // },
       {
         Header: "actions",
         accessor: "actions",
@@ -62,14 +153,14 @@ const ProductTable = () => {
             <Button
               style={{ padding: "0px" }}
               className="arrow-icon"
-              //   onClick={(e) => handleEdit(row?.row?.original?.id, "Edit")}
+              onClick={(e) => handleEdit(row?.row?.original?.id)}
             >
               <img src={EditIcon} alt="edit icon" className="edit-delete-icon" />
             </Button>
             <Button
               style={{ padding: "0px" }}
               className="arrow-icon"
-              //   onClick={(e) => handleEdit(row?.row?.original?.id, "Delete")}
+              onClick={(e) => handleDelete(row?.row?.original?.id)}
             >
               <img src={DeleteIcon} alt="detele icon" className="edit-delete-icon" />
             </Button>
@@ -78,79 +169,22 @@ const ProductTable = () => {
       },
     ],
 
-    rows: [
-      {
-        name: "Hanny Baniard",
-        position: "Data Coordiator",
-        office: "Baorixile",
-        age: 42,
-        startDate: "4/11/2021",
-        salary: "$474,978",
-      },
-
-      {
-        name: "Lara Puleque",
-        position: "Payment Adjustment Coordinator",
-        office: "Cijangkar",
-        age: 47,
-        startDate: "8/2/2021",
-        salary: "$387,287",
-      },
-      {
-        name: "Torie Repper",
-        position: "Administrative Officer",
-        office: "Montpellier",
-        age: 25,
-        startDate: "4/21/2021",
-        salary: "$94,780",
-      },
-      {
-        name: "Nat Gair",
-        position: "Help Desk Technician",
-        office: "Imider",
-        age: 57,
-        startDate: "12/6/2020",
-        salary: "$179,177",
-      },
-      {
-        name: "Maggi Slowan",
-        position: "Help Desk Technician",
-        office: "Jaunpils",
-        age: 56,
-        startDate: "11/7/2020",
-        salary: "$440,874",
-      },
-      {
-        name: "Marleah Snipe",
-        position: "Account Representative II",
-        office: "Orekhovo-Borisovo Severnoye",
-        age: 31,
-        startDate: "7/18/2021",
-        salary: "$404,983",
-      },
-      {
-        name: "Georgia Danbury",
-        position: "Professor",
-        office: "Gniezno",
-        age: 50,
-        startDate: "10/1/2020",
-        salary: "$346,576",
-      },
-    ],
+    rows: productList,
   };
 
-  const filteredRows = dataTableData.rows.filter((row) =>
-    row.name.toLowerCase().includes(filter2.name.toLowerCase())
-  );
+  // const filteredRows = dataTableData.rows.filter((row) =>
+  //   row.name.toLowerCase().includes(filter2.name.toLowerCase())
+  // );
 
   return (
     <div>
       <DashboardLayout>
         <DashboardNavbar />
         <SoftBox py={3}>
-            <MyModal text="Product" modalhead="Edit" TransitionComponent={Transition}>
-                <ProductForm />
-            </MyModal>
+          <MyModal text="Product" modalhead={`${edit ? "Edit" : "Add"} Product`}>
+            <ProductForm fatchProductData={fatchProductData} />
+            {/* <Toast /> */}
+          </MyModal>
           {/* <SoftBox>
             <Button onClick={handleClickOpen}>Add</Button>
             <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -161,7 +195,8 @@ const ProductTable = () => {
           </SoftBox> */}
           <Card>
             <DataTable
-              table={{ ...dataTableData, rows: filteredRows }}
+              // table={{ ...dataTableData, rows: filteredRows }}
+              table={dataTableData}
               canSearch
               tableTitle="Products"
               entriesPerPage

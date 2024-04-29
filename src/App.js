@@ -13,7 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
+import "./App.css";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -47,6 +48,9 @@ import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "contex
 
 // Images
 import brand from "assets/images/logo-ct.png";
+import MDSnackbar from "components/Snackbar";
+import { PopupContext } from "context/Popup";
+import SnackbarNotification from "components/SnackbarNotification";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -94,6 +98,9 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+
+  const { notification, setNotification } = useContext(PopupContext);
+  const closeSuccessSB = () => setNotification({ ...notification, open: false });
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
@@ -179,6 +186,18 @@ export default function App() {
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
+      <MDSnackbar
+        color={notification.color}
+        icon={notification.icon}
+        title={notification.title}
+        content={notification.content}
+        dateTime=""
+        open={notification.open}
+        onClose={closeSuccessSB}
+        close={closeSuccessSB}
+        bgWhite
+      />
+      <SnackbarNotification />
     </ThemeProvider>
   );
 }
